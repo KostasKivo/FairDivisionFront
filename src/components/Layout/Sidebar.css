@@ -1,0 +1,20 @@
+.sidebar {
+    grid-column: 1;
+    background-color: #b1afff;
+    height: auto;
+    padding: 5%;
+    box-sizing: border-box;
+  }
+  
+  .agent-slider-container {
+    margin-top: 20px;
+  }
+
+  .goods-slider-container {
+    margin-top: 20px;
+  }
+  
+  #slider {
+    width: 100%;
+  }
+  

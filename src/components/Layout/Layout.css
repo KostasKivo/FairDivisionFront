@@ -1,0 +1,16 @@
+.layout {
+  width: 1920px;
+  height: 1080px;
+  display: grid;
+  grid:
+    "sidebar body" 100%
+    / 15% 80%;
+}
+
+
+.separator {
+  grid-column: 2;
+  background-color: #000; /* Line color */
+  width: 1px;
+  height: 100%; /* Ensure the separator extends the entire height */
+}
