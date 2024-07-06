@@ -76,6 +76,7 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
             agentSliderValue,
             goodsSliderValue,
             valuationDropdownValue: dropdownValue,
+            algorithmDropdownValue : algorithmDropdownValue,
             valuationContainer: valuations.flat().join(","),
         };
 
