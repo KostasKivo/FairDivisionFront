@@ -12,6 +12,7 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
     const [agentSliderValue, setAgentSliderValue] = useState(1);
     const [goodsSliderValue, setGoodsSliderValue] = useState(1);
     const [dropdownValue, setDropdownValue] = useState<string>("1");
+    const [algorithmDropdownValue, setAlgorithmDropdownValue] = useState<string>("1");
     const [valuations, setValuations] = useState<number[][]>([]);
     const [expandedAgents, setExpandedAgents] = useState<boolean[]>([]);
 
@@ -46,6 +47,10 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
 
     const handleDropdownChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setDropdownValue(e.target.value);
+    };
+
+    const handleAlgorithmDropdownChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setAlgorithmDropdownValue(e.target.value);
     };
 
     const handleValuationChange = (agentIndex: number, goodIndex: number, value: number) => {
@@ -125,6 +130,15 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
                     <option value="1">Additive valuations</option>
                     {/* <option value="b">Option B</option>
                     <option value="c">Option C</option> */}
+                </select>
+            </div>
+            <hr />
+            <div className="algorithm-dropdown-container">
+                <p>Choose algorithm:</p>
+                <select value={algorithmDropdownValue} onChange={handleAlgorithmDropdownChange}>
+                    <option value="1">Round Robin</option>
+                    <option value="2">Envy Cycle elimination</option>
+                    {/*<option value="c">Option C</option> */}
                 </select>
             </div>
             <hr />
