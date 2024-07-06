@@ -14,7 +14,7 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
     const [dropdownValue, setDropdownValue] = useState<string>("1");
     const [algorithmDropdownValue, setAlgorithmDropdownValue] = useState<string>("1");
     const [valuations, setValuations] = useState<number[][]>([]);
-    const [expandedAgents, setExpandedAgents] = useState<boolean[]>([]);
+    const [expandedAgent, setExpandedAgent] = useState<number | null>(null);
 
     useEffect(() => {
         // Initialize or update the valuations matrix and expanded state when agentSliderValue or goodsSliderValue changes
@@ -29,7 +29,7 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
             return newValuations;
         });
 
-        setExpandedAgents(Array(agentSliderValue).fill(false));
+        setExpandedAgent(null);
     }, [agentSliderValue, goodsSliderValue]);
 
     const agentSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -62,11 +62,7 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
     };
 
     const toggleExpandAgent = (agentIndex: number) => {
-        setExpandedAgents((prev) => {
-            const newExpandedAgents = [...prev];
-            newExpandedAgents[agentIndex] = !newExpandedAgents[agentIndex];
-            return newExpandedAgents;
-        });
+        setExpandedAgent((prev) => (prev === agentIndex ? null : agentIndex));
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -148,7 +144,7 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
                     <div onClick={() => toggleExpandAgent(agentIndex)}>
                         <p>Agent {agentIndex + 1} valuations:</p>
                     </div>
-                    {expandedAgents[agentIndex] && (
+                    {expandedAgent === agentIndex && (
                         agentValuations.map((value, goodIndex) => (
                             <div key={goodIndex} className="good-slider-container">
                                 <label htmlFor={`agent-${agentIndex}-good-${goodIndex}`}>
