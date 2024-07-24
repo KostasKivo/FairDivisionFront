@@ -9,12 +9,13 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
     const agentMaxValue = 5;
     const submitUrl = "http://localhost:8080/submit";
 
-    const [agentSliderValue, setAgentSliderValue] = useState(1);
-    const [goodsSliderValue, setGoodsSliderValue] = useState(1);
-    const [dropdownValue, setDropdownValue] = useState<string>("1");
+    const [agentSliderValue, setAgentSliderValue] = useState<number>(1);
+    const [goodsSliderValue, setGoodsSliderValue] = useState<number>(1);
+    const [valuationDropdownValue, setValuationDropdownValue] = useState<string>("1");
     const [algorithmDropdownValue, setAlgorithmDropdownValue] = useState<string>("1");
     const [valuations, setValuations] = useState<number[][]>([]);
     const [expandedAgent, setExpandedAgent] = useState<number | null>(null);
+    const [showLeximinInput,setShowLeximinInput] = useState<boolean>(false);
 
     useEffect(() => {
         // Initialize or update the valuations matrix and expanded state when agentSliderValue or goodsSliderValue changes
@@ -46,11 +47,13 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
     };
 
     const handleDropdownChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setDropdownValue(e.target.value);
+        setValuationDropdownValue(e.target.value);
     };
 
     const handleAlgorithmDropdownChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setAlgorithmDropdownValue(e.target.value);
+        const value = e.target.value;
+        setAlgorithmDropdownValue(value);
+        setShowLeximinInput(value === "4");
     };
 
     const handleValuationChange = (agentIndex: number, goodIndex: number, value: number) => {
@@ -71,8 +74,8 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
         const requestData = {
             agentSliderValue,
             goodsSliderValue,
-            valuationDropdownValue: dropdownValue,
-            algorithmDropdownValue : algorithmDropdownValue,
+            valuationDropdownValue,
+            algorithmDropdownValue,
             valuationContainer: valuations.flat().join(","),
         };
 
@@ -123,7 +126,7 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
             <hr />
             <div className="valuation-dropdown-container">
                 <p>Choose valuation:</p>
-                <select value={dropdownValue} onChange={handleDropdownChange}>
+                <select value={valuationDropdownValue} onChange={handleDropdownChange}>
                     <option value="1">Additive valuations</option>
                     {/* <option value="b">Option B</option>
                     <option value="c">Option C</option> */}
@@ -135,9 +138,19 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
                 <select value={algorithmDropdownValue} onChange={handleAlgorithmDropdownChange}>
                     <option value="1">Round Robin</option>
                     <option value="2">Envy Cycle elimination</option>
-                    {/*<option value="c">Option C</option> */}
+                    <option value="3">Match And Freeze</option>
+                    <option value="4">Leximin++</option>
                 </select>
             </div>
+            {showLeximinInput && (
+                <>
+                    <hr/>
+                <div className="leximin-input-container">
+                    <p>Additional input for Leximin++</p>
+                    <input type="text" placeholder="Enter additional input" />
+                </div>
+                </>
+            )}
             <hr />
             {valuations.map((agentValuations, agentIndex) => (
                 <div key={agentIndex} className="agent-valuation-container">
