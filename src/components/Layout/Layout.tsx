@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import Sidebar from "./Sidebar";
 import Body from "./Body";
 import "./Layout.css"; // Create this file for Layout specific styles

@@ -1,4 +1,4 @@
-import React, { useState, FormEvent } from "react";
+import React, {FormEvent, useState} from "react";
 import "./Register.css"; // Import the CSS file for styling
 
 function Register() {

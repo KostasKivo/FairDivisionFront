@@ -1,13 +1,8 @@
-import {
-  Route,
-  BrowserRouter as Router,
-  Routes,
-  useLocation,
-} from "react-router-dom";
+import {BrowserRouter as Router, Route, Routes, useLocation,} from "react-router-dom";
 import Header from "./components/Header/Header";
 import Login from "./components/Header/Login";
 import Register from "./components/Header/Register";
-import { Layout } from "./components/Layout/Layout";
+import {Layout} from "./components/Layout/Layout";
 
 function App() {
   return (
