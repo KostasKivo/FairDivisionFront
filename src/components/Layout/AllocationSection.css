@@ -12,3 +12,7 @@
 .allocation-container .leximin-agent-${agentIndex}-allocation-container {
     transition: max-height 0.3s ease;
 }
+
+.inner-p {
+    font-size: 90%;
+}

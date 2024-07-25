@@ -25,7 +25,7 @@ const AllocationSection: React.FC<AllocationSectionProps> = ({
                 <div>
                     {allocations.map((agentAllocations, agentIndex) => (
                         <div key={agentIndex} className={`leximin-agent-${agentIndex}-allocation-container`}>
-                            <p>Agent {agentIndex + 1} Bundle</p>
+                            <p className={"inner-p"}>Agent {agentIndex + 1} Bundle</p>
                             <input
                                 type="text"
                                 placeholder="Enter comma separated goods"
