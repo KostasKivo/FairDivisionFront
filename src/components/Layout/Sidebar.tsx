@@ -8,7 +8,7 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
     const agentMaxValue = 5;
-    const submitUrl = "http://localhost:8080/submit";
+    const DEFAULT_SUBMIT_URL = "http://localhost:8080/submit";
 
     const [agentSliderValue, setAgentSliderValue] = useState<number>(1);
     const [goodsSliderValue, setGoodsSliderValue] = useState<number>(1);
@@ -47,7 +47,7 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
                 .map( (_,agentIndex) =>
                 Array(goodsSliderValue)
                     .fill(null)
-                    .map( (_,allocatedGoodIndex) =>  (prev[agentIndex] && prev[agentIndex][allocatedGoodIndex]) || 1)
+                    .map( (_,allocatedGoodIndex) =>  (prev[agentIndex] && prev[agentIndex][allocatedGoodIndex]) || 0)
                 );
             return newAllocation;
         });
@@ -62,7 +62,7 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
                 .map( (_,agentIndex) =>
                     Array(goodsSliderValue)
                         .fill(null)
-                        .map( (_,allocatedGoodIndex) =>  (prev[agentIndex] && prev[agentIndex][allocatedGoodIndex]) || 1)
+                        .map( (_,allocatedGoodIndex) =>  (prev[agentIndex] && prev[agentIndex][allocatedGoodIndex]) || 0)
                 );
             return newAllocation;
         });
@@ -138,7 +138,7 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        const requestData = {
+        const requestData: Record<string, any> = {
             agentSliderValue,
             goodsSliderValue,
             valuationDropdownValue,
@@ -146,8 +146,14 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
             valuationContainer: valuations.flat().join(","),
         };
 
+        // Conditionally add leximin allocations if the algorithmDropdownValue is "4"
+        if (algorithmDropdownValue === "4") {
+            requestData.leximinFirstAllocation = leximinFirstAllocation.map(agent => agent.join(',')).join('|');
+            requestData.leximinSecondAllocation = leximinSecondAllocation.map(agent => agent.join(',')).join('|');
+        }
+
         try {
-            const response = await fetch(submitUrl, {
+            const response = await fetch(DEFAULT_SUBMIT_URL, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
