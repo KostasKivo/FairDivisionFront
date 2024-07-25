@@ -16,6 +16,8 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
     const [valuations, setValuations] = useState<number[][]>([]);
     const [expandedAgent, setExpandedAgent] = useState<number | null>(null);
     const [showLeximinInput,setShowLeximinInput] = useState<boolean>(false);
+    const [leximinFirstAllocation, setLeximinFirstAllocation] = useState<number[][]>([]);
+    const [expandedFirstAllocation, setExpandedFirstAllocation] = useState<boolean>(false);
 
     useEffect(() => {
         // Initialize or update the valuations matrix and expanded state when agentSliderValue or goodsSliderValue changes
@@ -32,6 +34,32 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
 
         setExpandedAgent(null);
     }, [agentSliderValue, goodsSliderValue]);
+
+    useEffect( () => {
+        setLeximinFirstAllocation( (prev) => {
+            const newAllocation = Array(agentSliderValue)
+                .fill(null )
+                .map( (_,agentIndex) =>
+                Array(goodsSliderValue)
+                    .fill(null)
+                    .map( (_,allocatedGoodIndex) =>  (prev[agentIndex] && prev[agentIndex][allocatedGoodIndex]) || 1)
+                );
+            return newAllocation;
+        });
+
+        setExpandedFirstAllocation(false);
+    }, [showLeximinInput,agentSliderValue]);
+
+
+    const leximinFirstAllocationChange = (agentIndex: number, allocation: string) => {
+        const allocatedItems = allocation.split(',').map(Number);
+
+        setLeximinFirstAllocation((prev) => {
+            const newAllocation = [...prev];
+            newAllocation[agentIndex] = allocatedItems;
+            return newAllocation;
+        });
+    };
 
     const agentSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = Number(e.target.value);
@@ -67,6 +95,10 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
     const toggleExpandAgent = (agentIndex: number) => {
         setExpandedAgent((prev) => (prev === agentIndex ? null : agentIndex));
     };
+
+    const toggleExpandFirstAllocation = () => {
+        setExpandedFirstAllocation((prev) => !prev);
+    }
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -144,11 +176,27 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
             </div>
             {showLeximinInput && (
                 <>
-                    <hr/>
-                <div className="leximin-input-container">
-                    <p>Additional input for Leximin++</p>
-                    <input type="text" placeholder="Enter additional input" />
-                </div>
+                    <hr />
+                    <div className="first-agent-allocation-container">
+                    <div onClick={toggleExpandFirstAllocation} style={{ cursor: 'pointer' }}>
+                        <p>Toggle First Allocation</p>
+                    </div>
+                        {expandedFirstAllocation && (
+                            <div>
+                                {leximinFirstAllocation.map((agentAllocations, agentIndex) => (
+                                    <div key={agentIndex} className={`leximin-agent-${agentIndex}-allocation-container`}>
+                                    <p>Agent {agentIndex + 1} Bundle</p>
+                                        <input
+                                            type="text"
+                                            placeholder="Enter comma separated goods"
+                                            onChange={(e) =>
+                                                leximinFirstAllocationChange(agentIndex, e.target.value)}
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
                 </>
             )}
             <hr />
@@ -163,7 +211,7 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
                                 <label htmlFor={`agent-${agentIndex}-good-${goodIndex}`}>
                                     Good {goodIndex + 1} value: {value}
                                 </label>
-                                <input
+                                    <input
                                     type="range"
                                     id={`agent-${agentIndex}-good-${goodIndex}`}
                                     min="1"
