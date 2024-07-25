@@ -39,16 +39,6 @@ input[type="range"] {
 }
 
 
-.first-agent-allocation-container {
-    text-align: center;
-    padding: 5%;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    margin-bottom: 10px;
-    cursor: pointer;
-    background-color: #ffffff;
-    transition: background-color 0.3s;
-}
 
 /* Hover effect for agent valuation container */
 .agent-valuation-container:hover {
@@ -102,6 +92,4 @@ button[type="submit"]:hover {
     transition: max-height 0.3s ease;
 }
 
-.first-agent-allocation-container .leximin-agent-allocation-container {
-    transition: max-height 0.3s ease;
-}
+

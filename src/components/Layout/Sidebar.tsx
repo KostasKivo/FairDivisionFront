@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import "./Sidebar.css";
+import AllocationSection from "./AllocationSection";
 
 interface SidebarProps {
     setResponse: (response: any) => void;
@@ -16,8 +17,12 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
     const [valuations, setValuations] = useState<number[][]>([]);
     const [expandedAgent, setExpandedAgent] = useState<number | null>(null);
     const [showLeximinInput,setShowLeximinInput] = useState<boolean>(false);
+
     const [leximinFirstAllocation, setLeximinFirstAllocation] = useState<number[][]>([]);
     const [expandedFirstAllocation, setExpandedFirstAllocation] = useState<boolean>(false);
+
+    const [leximinSecondAllocation, setLeximinSecondAllocation] = useState<number[][]>([]);
+    const [expandedSecondAllocation, setExpandedSecondAllocation] = useState<boolean>(false);
 
     useEffect(() => {
         // Initialize or update the valuations matrix and expanded state when agentSliderValue or goodsSliderValue changes
@@ -50,16 +55,42 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
         setExpandedFirstAllocation(false);
     }, [showLeximinInput,agentSliderValue]);
 
-
-    const leximinFirstAllocationChange = (agentIndex: number, allocation: string) => {
-        const allocatedItems = allocation.split(',').map(Number);
-
-        setLeximinFirstAllocation((prev) => {
-            const newAllocation = [...prev];
-            newAllocation[agentIndex] = allocatedItems;
+    useEffect( () => {
+        setLeximinSecondAllocation( (prev) => {
+            const newAllocation = Array(agentSliderValue)
+                .fill(null )
+                .map( (_,agentIndex) =>
+                    Array(goodsSliderValue)
+                        .fill(null)
+                        .map( (_,allocatedGoodIndex) =>  (prev[agentIndex] && prev[agentIndex][allocatedGoodIndex]) || 1)
+                );
             return newAllocation;
         });
+
+        setExpandedSecondAllocation(false);
+    }, [showLeximinInput,agentSliderValue]);
+
+
+    const leximinAllocationChange = (allocationType: 'first' | 'second', agentIndex: number, allocation: string) => {
+        // Parse the allocation string into an array of numbers
+        const allocatedItems = allocation.split(',').map(Number);
+
+        // Update the state based on the allocationType
+        if (allocationType === 'first') {
+            setLeximinFirstAllocation((prev) => {
+                const newAllocations = [...prev];
+                newAllocations[agentIndex] = allocatedItems;
+                return newAllocations;
+            });
+        } else if (allocationType === 'second') {
+            setLeximinSecondAllocation((prev) => {
+                const newAllocations = [...prev];
+                newAllocations[agentIndex] = allocatedItems;
+                return newAllocations;
+            });
+        }
     };
+
 
     const agentSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = Number(e.target.value);
@@ -96,9 +127,13 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
         setExpandedAgent((prev) => (prev === agentIndex ? null : agentIndex));
     };
 
-    const toggleExpandFirstAllocation = () => {
-        setExpandedFirstAllocation((prev) => !prev);
-    }
+    const toggleExpandAllocation = (type: 'first' | 'second') => {
+        if (type === 'first') {
+            setExpandedFirstAllocation((prev) => !prev);
+        } else {
+            setExpandedSecondAllocation((prev) => !prev);
+        }
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -177,26 +212,21 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
             {showLeximinInput && (
                 <>
                     <hr />
-                    <div className="first-agent-allocation-container">
-                    <div onClick={toggleExpandFirstAllocation} style={{ cursor: 'pointer' }}>
-                        <p>Toggle First Allocation</p>
-                    </div>
-                        {expandedFirstAllocation && (
-                            <div>
-                                {leximinFirstAllocation.map((agentAllocations, agentIndex) => (
-                                    <div key={agentIndex} className={`leximin-agent-${agentIndex}-allocation-container`}>
-                                    <p>Agent {agentIndex + 1} Bundle</p>
-                                        <input
-                                            type="text"
-                                            placeholder="Enter comma separated goods"
-                                            onChange={(e) =>
-                                                leximinFirstAllocationChange(agentIndex, e.target.value)}
-                                        />
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                    </div>
+                    <AllocationSection
+                        title="Toggle First Allocation"
+                        allocations={leximinFirstAllocation}
+                        onChange={(agentIndex, value) => leximinAllocationChange('first', agentIndex, value)}
+                        expanded={expandedFirstAllocation}
+                        toggleExpand={() => toggleExpandAllocation('first')}
+                    />
+                    <hr />
+                    <AllocationSection
+                        title="Toggle Second Allocation"
+                        allocations={leximinSecondAllocation}
+                        onChange={(agentIndex, value) => leximinAllocationChange('second', agentIndex, value)}
+                        expanded={expandedSecondAllocation}
+                        toggleExpand={() => toggleExpandAllocation('second')}
+                    />
                 </>
             )}
             <hr />
