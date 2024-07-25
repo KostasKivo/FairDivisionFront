@@ -212,16 +212,16 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
             {showLeximinInput && (
                 <>
                     <hr />
+                    <p>Put two allocations to compare:</p>
                     <AllocationSection
-                        title="Toggle First Allocation"
+                        title="First Allocation"
                         allocations={leximinFirstAllocation}
                         onChange={(agentIndex, value) => leximinAllocationChange('first', agentIndex, value)}
                         expanded={expandedFirstAllocation}
                         toggleExpand={() => toggleExpandAllocation('first')}
                     />
-                    <hr />
                     <AllocationSection
-                        title="Toggle Second Allocation"
+                        title="Second Allocation"
                         allocations={leximinSecondAllocation}
                         onChange={(agentIndex, value) => leximinAllocationChange('second', agentIndex, value)}
                         expanded={expandedSecondAllocation}
