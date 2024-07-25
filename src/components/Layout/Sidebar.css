@@ -1,9 +1,8 @@
 /* Sidebar container styling */
 .sidebar {
-    width: 300px;
+    width: 100%;
     padding: 20px;
     background-color: #b1afff;
-    border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     font-family: Arial, sans-serif;
 }

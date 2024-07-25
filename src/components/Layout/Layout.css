@@ -1,16 +1,34 @@
 .layout {
-  width: 1920px;
-  height: 1080px;
+  width: 100%; /* Make sure the layout covers the full viewport width */
+  min-height: 100vh; /* Ensure the layout takes at least the full viewport height */
   display: grid;
-  grid:
-    "sidebar body" 100%
-    / 15% 80%;
+  grid-template-rows: 100%;
+  grid-template-columns: 15% 85%; /* Make sure the total width is 100% */
+  grid-template-areas: "sidebar body";
 }
 
+/* Medium screens */
+@media (max-width: 1024px) {
+  .layout {
+    grid-template-columns: 20% 80%; /* Adjusted width for medium screens */
+  }
+}
 
-.separator {
-  grid-column: 2;
-  background-color: #000; /* Line color */
-  width: 1px;
-  height: 100%; /* Ensure the separator extends the entire height */
+/* Small screens */
+@media (max-width: 768px) {
+  .layout {
+    grid-template-rows: auto auto; /* Stack rows vertically */
+    grid-template-columns: 100%; /* Full width for both */
+    grid-template-areas:
+            "sidebar"
+            "body";
+  }
+
+  .sidebar {
+    grid-area: sidebar;
+  }
+
+  .body {
+    grid-area: body;
+  }
 }
