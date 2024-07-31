@@ -3,7 +3,7 @@
   min-height: 100vh; /* Ensure the layout takes at least the full viewport height */
   display: grid;
   grid-template-rows: 100%;
-  grid-template-columns: 15% 85%; /* Make sure the total width is 100% */
+  grid-template-columns: 25% 75%; /* Make sure the total width is 100% */
   grid-template-areas: "sidebar body";
 }
 
