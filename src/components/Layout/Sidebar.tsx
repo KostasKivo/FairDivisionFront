@@ -18,10 +18,10 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
     const [expandedAgent, setExpandedAgent] = useState<number | null>(null);
     const [showLeximinInput,setShowLeximinInput] = useState<boolean>(false);
 
-    const [leximinFirstAllocation, setLeximinFirstAllocation] = useState<number[][]>([]);
+    const [leximinFirstAllocation, setLeximinFirstAllocation] = useState<string[][]>([]);
     const [expandedFirstAllocation, setExpandedFirstAllocation] = useState<boolean>(false);
 
-    const [leximinSecondAllocation, setLeximinSecondAllocation] = useState<number[][]>([]);
+    const [leximinSecondAllocation, setLeximinSecondAllocation] = useState<string[][]>([]);
     const [expandedSecondAllocation, setExpandedSecondAllocation] = useState<boolean>(false);
 
     useEffect(() => {
@@ -47,7 +47,7 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
                 .map( (_,agentIndex) =>
                 Array(goodsSliderValue)
                     .fill(null)
-                    .map( (_,allocatedGoodIndex) =>  (prev[agentIndex] && prev[agentIndex][allocatedGoodIndex]) || 0)
+                    .map( (_,allocatedGoodIndex) =>  (prev[agentIndex] && prev[agentIndex][allocatedGoodIndex]) || "")
                 );
             return newAllocation;
         });
@@ -62,7 +62,7 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
                 .map( (_,agentIndex) =>
                     Array(goodsSliderValue)
                         .fill(null)
-                        .map( (_,allocatedGoodIndex) =>  (prev[agentIndex] && prev[agentIndex][allocatedGoodIndex]) || 0)
+                        .map( (_,allocatedGoodIndex) =>  (prev[agentIndex] && prev[agentIndex][allocatedGoodIndex]) || "")
                 );
             return newAllocation;
         });
@@ -72,10 +72,10 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
 
 
     const leximinAllocationChange = (allocationType: 'first' | 'second', agentIndex: number, allocation: string) => {
-        // Parse the allocation string into an array of numbers
-        const allocatedItems = allocation.split(',').map(Number);
+        const allocatedItems = allocation.split(',').map(item => item.trim());
 
-        // Update the state based on the allocationType
+        console.log(agentIndex);
+
         if (allocationType === 'first') {
             setLeximinFirstAllocation((prev) => {
                 const newAllocations = [...prev];
@@ -148,8 +148,14 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
 
         // Conditionally add leximin allocations if the algorithmDropdownValue is "4"
         if (algorithmDropdownValue === "4") {
-            requestData.leximinFirstAllocation = leximinFirstAllocation.map(agent => agent.join(',')).join('|');
-            requestData.leximinSecondAllocation = leximinSecondAllocation.map(agent => agent.join(',')).join('|');
+            requestData.leximinFirstAllocation = leximinFirstAllocation.map(bundle =>
+                bundle.map(item => item === '' ? undefined : parseInt(item))
+                    .filter(value => value !== undefined)
+            );
+            requestData.leximinSecondAllocation = leximinSecondAllocation.map(bundle =>
+                bundle.map(item => item === '' ? undefined : parseInt(item))
+                    .filter(value => value !== undefined)
+            );
         }
 
         try {

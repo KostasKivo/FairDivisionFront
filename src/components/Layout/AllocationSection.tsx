@@ -3,7 +3,7 @@ import "./AllocationSection.css";
 
 interface AllocationSectionProps {
     title: string;
-    allocations: number[][];
+    allocations: string[][];
     onChange: (agentIndex: number, value: string) => void;
     expanded: boolean;
     toggleExpand: () => void;
@@ -29,8 +29,18 @@ const AllocationSection: React.FC<AllocationSectionProps> = ({
                             <input
                                 type="text"
                                 placeholder="Enter comma separated goods"
-                                onChange={(e) => onChange(agentIndex, e.target.value)}
+                                value={agentAllocations.join(',')}
+                                onChange={(e) => {
+                                    const value = e.target.value;
+                                    const numbersOnly = value.split(',')
+                                        .map(item => item.trim())
+                                        .filter(item => !isNaN(Number(item)))
+                                        .join(',');
+                                    onChange(agentIndex, numbersOnly);
+                                }}
+                                onClick={() => console.log(agentAllocations)}
                             />
+
                         </div>
                     ))}
                 </div>
