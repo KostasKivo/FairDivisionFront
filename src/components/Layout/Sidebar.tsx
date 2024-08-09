@@ -219,6 +219,7 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
                     <option value="2">Envy Cycle elimination</option>
                     <option value="3">Match And Freeze</option>
                     <option value="4">Leximin++</option>
+                    <option value="5">Maximum Nash Welfare</option>
                 </select>
             </div>
             {showLeximinInput && (
