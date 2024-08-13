@@ -3,4 +3,13 @@
     background-color: #bbe9ff;
     height: 100%;
   }
+
+.instruction-message {
+    background-color: #a79f22;
+    padding: 5%;
+    text-align: center;
+    margin: 20% auto 0;
+    width: 50%;
+    border: 3px solid yellow;
+}
   
