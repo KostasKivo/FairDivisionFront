@@ -7,7 +7,8 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
-    const agentMaxValue = 5;
+    const agentMaxValue = 100;
+    const goodsMaxValue = 100;
     const DEFAULT_SUBMIT_URL = "http://localhost:8080/submit";
 
     const [agentSliderValue, setAgentSliderValue] = useState<number>(1);
@@ -197,7 +198,7 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
                     type="range"
                     id="goodsSlider"
                     min="1"
-                    max={agentSliderValue * 2}
+                    max={goodsMaxValue}
                     value={goodsSliderValue}
                     onChange={goodsSliderChange}
                 />

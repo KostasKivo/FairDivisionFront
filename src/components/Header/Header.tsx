@@ -10,11 +10,8 @@ function Header() {
         </Link>
       </div>
       <div className="auth-buttons">
-        <Link to="/login" className="login-button custom-link">
-          Login
-        </Link>
-        <Link to="/register" className="register-button custom-link">
-          Register
+        <Link to="/about" className="login-button custom-link">
+          About
         </Link>
       </div>
     </header>

@@ -1,6 +1,6 @@
 .body {
     grid-column: 2;
-    background-color: #bbe9ff;
+    background-color: #efeeff;
     height: 100%;
   }
 
@@ -11,5 +11,54 @@
     margin: 20% auto 0;
     width: 50%;
     border: 3px solid yellow;
+}
+
+.error-message {
+    background-color: #a74339;
+    padding: 5%;
+    text-align: center;
+    margin: 20% auto 0;
+    width: 50%;
+    border: 3px solid darkred;
+}
+
+#results-container {
+    padding-top: 1%;
+}
+
+#results-text {
+    padding-left: 0.5%;
+}
+
+
+.allocation-table {
+    width: 100%;
+
+}
+
+.allocation-table th, .allocation-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+.allocation-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+.allocation-property-text {
+    margin-top: 15px;
+}
+
+
+
+#allocation-properties-text {
+    padding-top: 2%;
+    padding-left: 0.5%;
+}
+
+.allocation-property-text {
+    padding-left: 1%;
 }
   
