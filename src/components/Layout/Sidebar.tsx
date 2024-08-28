@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import "./Sidebar.css";
-import AllocationSection from "./AllocationSection";
 
 interface SidebarProps {
     setResponse: (response: any) => void;
@@ -21,17 +20,8 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
     const [algorithmDropdownValue, setAlgorithmDropdownValue] = useState<string>("1");
     const [valuations, setValuations] = useState<number[][]>([]);
     const [expandedAgent, setExpandedAgent] = useState<number | null>(null);
-    const [number1, setNumber1] = useState<number>(0);
-    const [number2, setNumber2] = useState<number>(0);
-
-
-    const [showLeximinInput,setShowLeximinInput] = useState<boolean>(false);
-
-    const [leximinFirstAllocation, setLeximinFirstAllocation] = useState<string[][]>([]);
-    const [expandedFirstAllocation, setExpandedFirstAllocation] = useState<boolean>(false);
-
-    const [leximinSecondAllocation, setLeximinSecondAllocation] = useState<string[][]>([]);
-    const [expandedSecondAllocation, setExpandedSecondAllocation] = useState<boolean>(false);
+    const [number1, setNumber1] = useState<number>(1);
+    const [number2, setNumber2] = useState<number>(1);
 
     useEffect(() => {
         // Initialize or update the valuations matrix and expanded state when agentSliderValue or goodsSliderValue changes
@@ -48,57 +38,6 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
 
         setExpandedAgent(null);
     }, [agentSliderValue, goodsSliderValue]);
-
-    useEffect( () => {
-        setLeximinFirstAllocation( (prev) => {
-            const newAllocation = Array(agentSliderValue)
-                .fill(null )
-                .map( (_,agentIndex) =>
-                Array(goodsSliderValue)
-                    .fill(null)
-                    .map( (_,allocatedGoodIndex) =>  (prev[agentIndex] && prev[agentIndex][allocatedGoodIndex]) || "")
-                );
-            return newAllocation;
-        });
-
-        setExpandedFirstAllocation(false);
-    }, [showLeximinInput,agentSliderValue]);
-
-    useEffect( () => {
-        setLeximinSecondAllocation( (prev) => {
-            const newAllocation = Array(agentSliderValue)
-                .fill(null )
-                .map( (_,agentIndex) =>
-                    Array(goodsSliderValue)
-                        .fill(null)
-                        .map( (_,allocatedGoodIndex) =>  (prev[agentIndex] && prev[agentIndex][allocatedGoodIndex]) || "")
-                );
-            return newAllocation;
-        });
-
-        setExpandedSecondAllocation(false);
-    }, [showLeximinInput,agentSliderValue]);
-
-
-    const leximinAllocationChange = (allocationType: 'first' | 'second', agentIndex: number, allocation: string) => {
-        const allocatedItems = allocation.split(',').map(item => item.trim());
-
-        console.log(agentIndex);
-
-        if (allocationType === 'first') {
-            setLeximinFirstAllocation((prev) => {
-                const newAllocations = [...prev];
-                newAllocations[agentIndex] = allocatedItems;
-                return newAllocations;
-            });
-        } else if (allocationType === 'second') {
-            setLeximinSecondAllocation((prev) => {
-                const newAllocations = [...prev];
-                newAllocations[agentIndex] = allocatedItems;
-                return newAllocations;
-            });
-        }
-    };
 
 
     const agentSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -118,7 +57,6 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
     const handleAlgorithmDropdownChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const value = e.target.value;
         setAlgorithmDropdownValue(value);
-        setShowLeximinInput(value === "4");
     };
 
     const handleValuationChange = (agentIndex: number, goodIndex: number, value: number) => {
@@ -131,14 +69,6 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
 
     const toggleExpandAgent = (agentIndex: number) => {
         setExpandedAgent((prev) => (prev === agentIndex ? null : agentIndex));
-    };
-
-    const toggleExpandAllocation = (type: 'first' | 'second') => {
-        if (type === 'first') {
-            setExpandedFirstAllocation((prev) => !prev);
-        } else {
-            setExpandedSecondAllocation((prev) => !prev);
-        }
     };
 
     const generateRandomValuations = () => {
@@ -165,18 +95,6 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
             algorithmDropdownValue,
             valuationContainer: valuations.flat().join(","),
         };
-
-        // Conditionally add leximin allocations if the algorithmDropdownValue is "4"
-        if (algorithmDropdownValue === "4") {
-            requestData.leximinFirstAllocation = leximinFirstAllocation.map(bundle =>
-                bundle.map(item => item === '' ? undefined : parseInt(item))
-                    .filter(value => value !== undefined)
-            );
-            requestData.leximinSecondAllocation = leximinSecondAllocation.map(bundle =>
-                bundle.map(item => item === '' ? undefined : parseInt(item))
-                    .filter(value => value !== undefined)
-            );
-        }
 
         try {
             const response = await fetch(DEFAULT_SUBMIT_URL, {
@@ -270,26 +188,6 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
                 </div>
                 <button className="generate-button" onClick={generateBinaryValuations}>Generate Binary Valuation</button>
             </div>
-            {showLeximinInput && (
-                <>
-                    <hr />
-                    <p>Put two allocations to compare:</p>
-                    <AllocationSection
-                        title="First Allocation"
-                        allocations={leximinFirstAllocation}
-                        onChange={(agentIndex, value) => leximinAllocationChange('first', agentIndex, value)}
-                        expanded={expandedFirstAllocation}
-                        toggleExpand={() => toggleExpandAllocation('first')}
-                    />
-                    <AllocationSection
-                        title="Second Allocation"
-                        allocations={leximinSecondAllocation}
-                        onChange={(agentIndex, value) => leximinAllocationChange('second', agentIndex, value)}
-                        expanded={expandedSecondAllocation}
-                        toggleExpand={() => toggleExpandAllocation('second')}
-                    />
-                </>
-            )}
             <hr />
             {valuations.map((agentValuations, agentIndex) => (
                 <div key={agentIndex} className="agent-valuation-container">
