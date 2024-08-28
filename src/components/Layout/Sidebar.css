@@ -68,6 +68,46 @@ input[type="text"] {
     font-size: 14px;
 }
 
+/* Container for buttons using flexbox */
+.button-container {
+    display: flex;
+    flex-direction: column; /* Stack buttons vertically */
+    gap: 10px; /* Space between buttons */
+}
+
+/* Style for the generate button */
+button.generate-button {
+    padding: 10px 20px;
+    background-color: #007bff; /* Blue background */
+    border: none;
+    border-radius: 4px;
+    color: #fff; /* White text */
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s; /* Smooth transitions */
+    width: 100%; /* Make the button take full width of the container */
+}
+
+/* Hover effect */
+button.generate-button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+    transform: scale(1.05); /* Slightly enlarge the button */
+}
+
+/* Active (clicked) effect */
+button.generate-button:active {
+    background-color: #00408f; /* Even darker blue on click */
+    transform: scale(1); /* Return to original size */
+}
+
+/* Focus effect */
+button.generate-button:focus {
+    outline: none; /* Remove default focus outline */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Blue shadow on focus */
+}
+
+
 /* Styling for submit button */
 button[type="submit"] {
     width: 100%;
@@ -91,4 +131,19 @@ button[type="submit"]:hover {
     transition: max-height 0.3s ease;
 }
 
+
+.input-container {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+input[type="number"] {
+    padding: 8px;
+    font-size: 16px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    width: 100%;
+}
 

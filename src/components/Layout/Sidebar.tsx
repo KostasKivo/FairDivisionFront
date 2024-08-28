@@ -6,9 +6,13 @@ interface SidebarProps {
     setResponse: (response: any) => void;
 }
 
+const agentMaxValue = 100;
+const goodsMaxValue = 100;
+const minValuation = 1;
+const maxValuation = 10;
+
 const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
-    const agentMaxValue = 100;
-    const goodsMaxValue = 100;
+
     const DEFAULT_SUBMIT_URL = "http://localhost:8080/submit";
 
     const [agentSliderValue, setAgentSliderValue] = useState<number>(1);
@@ -17,6 +21,10 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
     const [algorithmDropdownValue, setAlgorithmDropdownValue] = useState<string>("1");
     const [valuations, setValuations] = useState<number[][]>([]);
     const [expandedAgent, setExpandedAgent] = useState<number | null>(null);
+    const [number1, setNumber1] = useState<number>(0);
+    const [number2, setNumber2] = useState<number>(0);
+
+
     const [showLeximinInput,setShowLeximinInput] = useState<boolean>(false);
 
     const [leximinFirstAllocation, setLeximinFirstAllocation] = useState<string[][]>([]);
@@ -96,9 +104,6 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
     const agentSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = Number(e.target.value);
         setAgentSliderValue(value);
-        if (goodsSliderValue > value * 2) {
-            setGoodsSliderValue(value * 2);
-        }
     };
 
     const goodsSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -134,6 +139,20 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
         } else {
             setExpandedSecondAllocation((prev) => !prev);
         }
+    };
+
+    const generateRandomValuations = () => {
+        const newValuations = Array.from({ length: agentSliderValue }, () =>
+            Array.from({ length: goodsSliderValue }, () => Math.floor(Math.random() * maxValuation) + 1)
+        );
+        setValuations(newValuations);
+    };
+
+    const generateBinaryValuations = () => {
+        const newValuations = valuations.map(row =>
+            row.map(() => (Math.random() > 0.5 ? number1 : number2))
+        );
+        setValuations(newValuations);
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -205,7 +224,7 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
             </div>
             <hr />
             <div className="valuation-dropdown-container">
-                <p>Choose valuation:</p>
+                <p>Choose valuation type:</p>
                 <select value={valuationDropdownValue} onChange={handleDropdownChange}>
                     <option value="1">Additive valuations</option>
                     {/* <option value="b">Option B</option>
@@ -222,6 +241,34 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
                     <option value="4">Leximin++</option>
                     <option value="5">Maximum Nash Welfare</option>
                 </select>
+            </div>
+            <hr />
+            <div className="button-container">
+                <p>Generate valuations automatically:</p>
+                {/*By default type submit, this will start a post request, type="button"*/}
+                <button className="generate-button" onClick={generateRandomValuations}>Generate Valuations</button>
+                <hr />
+                <p>Generate binary valuation:</p>
+                <div className="input-container">
+                    <p>Enter two numbers for binary valuation:</p>
+                    <input
+                        type="number"
+                        value={number1}
+                        min={minValuation}
+                        max={maxValuation}
+                        onChange={(e) => setNumber1(Number(e.target.value))}
+                        placeholder="Number 1"
+                    />
+                    <input
+                        type="number"
+                        value={number2}
+                        min={minValuation}
+                        max={maxValuation}
+                        onChange={(e) => setNumber2(Number(e.target.value))}
+                        placeholder="Number 2"
+                    />
+                </div>
+                <button className="generate-button" onClick={generateBinaryValuations}>Generate Binary Valuation</button>
             </div>
             {showLeximinInput && (
                 <>
@@ -258,8 +305,8 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
                                     <input
                                     type="range"
                                     id={`agent-${agentIndex}-good-${goodIndex}`}
-                                    min="1"
-                                    max="10"
+                                    min={minValuation}
+                                    max={maxValuation}
                                     value={value}
                                     onChange={(e) =>
                                         handleValuationChange(agentIndex, goodIndex, Number(e.target.value))
