@@ -42,8 +42,10 @@ const Body = ({ response }: { response: any }) => {
                     <div>
                         <h2 id="allocation-properties-text">Allocation Properties</h2>
                         <h3 className="allocation-property-text">Envy-Freeness: {response.ef ? "True" : "False"}</h3>
+                            <h3 className="allocation-property-text">Proportionality: {response.prop ? "True" : "False"}</h3>
                         <h3 className="allocation-property-text">EF1: {response.ef1 ? "True" : "False"}</h3>
                         <h3 className="allocation-property-text">EFX: {response.efx ? "True" : "False"}</h3>
+                        <h3 className="allocation-property-text">Nash Welfare Value: {response.nashWelfareValue}</h3>
                     </div>
                 </div>
             )}
