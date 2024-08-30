@@ -85,6 +85,17 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
         setValuations(newValuations);
     };
 
+    const generateIdenticalValuations = () => {
+        // Generate a single random row of valuations
+        const identicalRow = Array.from({ length: goodsSliderValue }, () => Math.floor(Math.random() * maxValuation) + 1);
+
+        // Replicate the row for each agent
+        const newValuations = Array.from({ length: agentSliderValue }, () => identicalRow);
+
+        // Update the state with the identical valuations
+        setValuations(newValuations);
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -187,6 +198,8 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
                     />
                 </div>
                 <button className="generate-button" onClick={generateBinaryValuations}>Generate Binary Valuation</button>
+                <hr />
+                <button className="generate-button" onClick={generateIdenticalValuations}>Generate Identical Valuation</button>
             </div>
             <hr />
             {valuations.map((agentValuations, agentIndex) => (
