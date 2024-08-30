@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import "./Sidebar.css";
 
 interface SidebarProps {
@@ -7,6 +7,8 @@ interface SidebarProps {
 
 const agentMaxValue = 100;
 const goodsMaxValue = 100;
+const leximinAgentMax = 3;
+const leximinGoodsMax = 12;
 const minValuation = 1;
 const maxValuation = 10;
 
@@ -39,6 +41,17 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
         setExpandedAgent(null);
     }, [agentSliderValue, goodsSliderValue]);
 
+    useEffect(() => {
+        if (algorithmDropdownValue === "4") {
+            // Leximin++ algorithm selected
+            if (agentSliderValue > leximinAgentMax) {
+                setAgentSliderValue(leximinAgentMax);
+            }
+            if (goodsSliderValue > leximinGoodsMax) {
+                setGoodsSliderValue(leximinGoodsMax);
+            }
+        }
+    }, [algorithmDropdownValue]);
 
     const agentSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = Number(e.target.value);
@@ -57,6 +70,12 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
     const handleAlgorithmDropdownChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const value = e.target.value;
         setAlgorithmDropdownValue(value);
+
+        // Apply constraints if Leximin++ is selected
+        if (value === "4") {
+            setAgentSliderValue(Math.min(agentSliderValue, leximinAgentMax));
+            setGoodsSliderValue(Math.min(goodsSliderValue, leximinGoodsMax));
+        }
     };
 
     const handleValuationChange = (agentIndex: number, goodIndex: number, value: number) => {
@@ -86,13 +105,8 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
     };
 
     const generateIdenticalValuations = () => {
-        // Generate a single random row of valuations
         const identicalRow = Array.from({ length: goodsSliderValue }, () => Math.floor(Math.random() * maxValuation) + 1);
-
-        // Replicate the row for each agent
         const newValuations = Array.from({ length: agentSliderValue }, () => identicalRow);
-
-        // Update the state with the identical valuations
         setValuations(newValuations);
     };
 
@@ -133,7 +147,7 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
                     type="range"
                     id="agentSlider"
                     min="1"
-                    max={agentMaxValue}
+                    max={algorithmDropdownValue === "4" ? leximinAgentMax : agentMaxValue}
                     value={agentSliderValue}
                     onChange={agentSliderChange}
                 />
@@ -146,7 +160,7 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
                     type="range"
                     id="goodsSlider"
                     min="1"
-                    max={goodsMaxValue}
+                    max={algorithmDropdownValue === "4" ? leximinGoodsMax : goodsMaxValue}
                     value={goodsSliderValue}
                     onChange={goodsSliderChange}
                 />
@@ -156,8 +170,6 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
                 <p>Choose valuation type:</p>
                 <select value={valuationDropdownValue} onChange={handleDropdownChange}>
                     <option value="1">Additive valuations</option>
-                    {/* <option value="b">Option B</option>
-                    <option value="c">Option C</option> */}
                 </select>
             </div>
             <hr />
@@ -174,7 +186,6 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
             <hr />
             <div className="button-container">
                 <p>Generate valuations automatically:</p>
-                {/*By default type submit, this will start a post request, type="button"*/}
                 <button className="generate-button" onClick={generateRandomValuations}>Generate Valuations</button>
                 <hr />
                 <p>Generate binary valuation:</p>
@@ -213,7 +224,7 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
                                 <label htmlFor={`agent-${agentIndex}-good-${goodIndex}`}>
                                     Good {goodIndex + 1} value: {value}
                                 </label>
-                                    <input
+                                <input
                                     type="range"
                                     id={`agent-${agentIndex}-good-${goodIndex}`}
                                     min={minValuation}
