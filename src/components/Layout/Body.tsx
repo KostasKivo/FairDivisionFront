@@ -16,6 +16,7 @@ const Body = ({ response }: { response: any }) => {
                     <h2 id="results-text">Results of algorithm</h2>
                     <hr />
 
+                    {/* Allocation Table */}
                     <table className="allocation-table">
                         <thead>
                         <tr>
@@ -38,22 +39,44 @@ const Body = ({ response }: { response: any }) => {
                         </tbody>
                     </table>
 
-
+                    {/* Allocation Properties */}
                     <div>
                         <h2 id="allocation-properties-text">Allocation Properties</h2>
                         <h3 className="allocation-property-text">Envy-Freeness: {response.ef ? "True" : "False"}</h3>
-                            <h3 className="allocation-property-text">Proportionality: {response.prop ? "True" : "False"}</h3>
+                        <h3 className="allocation-property-text">Proportionality: {response.prop ? "True" : "False"}</h3>
                         <h3 className="allocation-property-text">EF1: {response.ef1 ? "True" : "False"}</h3>
                         <h3 className="allocation-property-text">EFX: {response.efx ? "True" : "False"}</h3>
                         <h3 className="allocation-property-text">Nash Welfare Value: {response.nashWelfareValue}</h3>
+                    </div>
+
+                    {/* Valuation Matrix */}
+                    <div className="valuation-matrix-container">
+                        <h2 id="valuation-matrix-text">Valuation Matrix</h2>
+                        <table className="valuation-matrix-table">
+                            <thead>
+                            <tr>
+                                <th>Agent/Good</th>
+                                {response.valuationMatrix[0].map((_: any, index: number) => (
+                                    <th key={index}>Good {index + 1}</th>
+                                ))}
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {response.valuationMatrix.map((agentValuations: any[], agentIndex: number) => (
+                                <tr key={agentIndex}>
+                                    <td>Agent {agentIndex + 1}</td>
+                                    {agentValuations.map((value, goodIndex) => (
+                                        <td key={goodIndex}>{value}</td>
+                                    ))}
+                                </tr>
+                            ))}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             )}
         </div>
     );
 };
-
-
-
 
 export default Body;
