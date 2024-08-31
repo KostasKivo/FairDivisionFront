@@ -194,7 +194,7 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
             <hr />
             <div className="button-container">
                 <p>Generate valuations automatically:</p>
-                <button type="button" className="generate-button" onClick={generateRandomValuations}>Generate Valuations</button>
+                <button className="generate-button" onClick={generateRandomValuations}>Generate Valuations</button>
                 <hr />
                 <p>Generate binary valuation:</p>
                 <div className="input-container">
@@ -216,9 +216,9 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
                         placeholder="Number 2"
                     />
                 </div>
-                <button type="button" className="generate-button" onClick={generateBinaryValuations}>Generate Binary Valuation</button>
+                <button className="generate-button" onClick={generateBinaryValuations}>Generate Binary Valuation</button>
                 <hr />
-                <button type="button" className="generate-button" onClick={generateIdenticalValuations}>Generate Identical Valuation</button>
+                <button className="generate-button" onClick={generateIdenticalValuations}>Generate Identical Valuation</button>
             </div>
             <hr />
             {valuations.map((agentValuations, agentIndex) => (
