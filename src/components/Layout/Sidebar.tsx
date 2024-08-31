@@ -7,8 +7,8 @@ interface SidebarProps {
 
 const agentMaxValue = 100;
 const goodsMaxValue = 100;
-const leximinAgentMax = 3;
-const leximinGoodsMax = 12;
+const combinationsMaxAgents = 3;
+const combinationMaxGoods = 12;
 const minValuation = 1;
 const maxValuation = 10;
 
@@ -42,16 +42,24 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
     }, [agentSliderValue, goodsSliderValue]);
 
     useEffect(() => {
-        if (algorithmDropdownValue === "4") {
-            // Leximin++ algorithm selected
-            if (agentSliderValue > leximinAgentMax) {
-                setAgentSliderValue(leximinAgentMax);
+        if (algorithmDropdownValue === "4" || algorithmDropdownValue === "5") {
+            // Apply constraints if Leximin++ or Maximum Nash Welfare is selected
+            if (agentSliderValue > combinationsMaxAgents) {
+                setAgentSliderValue(combinationsMaxAgents);
             }
-            if (goodsSliderValue > leximinGoodsMax) {
-                setGoodsSliderValue(leximinGoodsMax);
+            if (goodsSliderValue > combinationMaxGoods) {
+                setGoodsSliderValue(combinationMaxGoods);
             }
         }
     }, [algorithmDropdownValue]);
+
+    useEffect(() => {
+        // Ensure the slider values are within bounds when constraints change
+        if (algorithmDropdownValue === "4" || algorithmDropdownValue === "5") {
+            setAgentSliderValue(Math.min(agentSliderValue, combinationsMaxAgents));
+            setGoodsSliderValue(Math.min(goodsSliderValue, combinationMaxGoods));
+        }
+    }, [agentSliderValue, goodsSliderValue, algorithmDropdownValue]);
 
     const agentSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = Number(e.target.value);
@@ -71,10 +79,10 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
         const value = e.target.value;
         setAlgorithmDropdownValue(value);
 
-        // Apply constraints if Leximin++ is selected
-        if (value === "4") {
-            setAgentSliderValue(Math.min(agentSliderValue, leximinAgentMax));
-            setGoodsSliderValue(Math.min(goodsSliderValue, leximinGoodsMax));
+        // Apply constraints if Leximin++ or Maximum Nash Welfare is selected
+        if (value === "4" || value === "5") {
+            setAgentSliderValue(Math.min(agentSliderValue, combinationsMaxAgents));
+            setGoodsSliderValue(Math.min(goodsSliderValue, combinationMaxGoods));
         }
     };
 
@@ -147,7 +155,7 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
                     type="range"
                     id="agentSlider"
                     min="1"
-                    max={algorithmDropdownValue === "4" ? leximinAgentMax : agentMaxValue}
+                    max={algorithmDropdownValue === "4" || algorithmDropdownValue === "5" ? combinationsMaxAgents : agentMaxValue}
                     value={agentSliderValue}
                     onChange={agentSliderChange}
                 />
@@ -160,7 +168,7 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
                     type="range"
                     id="goodsSlider"
                     min="1"
-                    max={algorithmDropdownValue === "4" ? leximinGoodsMax : goodsMaxValue}
+                    max={algorithmDropdownValue === "4" || algorithmDropdownValue === "5" ? combinationMaxGoods : goodsMaxValue}
                     value={goodsSliderValue}
                     onChange={goodsSliderChange}
                 />
@@ -186,7 +194,7 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
             <hr />
             <div className="button-container">
                 <p>Generate valuations automatically:</p>
-                <button className="generate-button" onClick={generateRandomValuations}>Generate Valuations</button>
+                <button type="button" className="generate-button" onClick={generateRandomValuations}>Generate Valuations</button>
                 <hr />
                 <p>Generate binary valuation:</p>
                 <div className="input-container">
@@ -208,9 +216,9 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
                         placeholder="Number 2"
                     />
                 </div>
-                <button className="generate-button" onClick={generateBinaryValuations}>Generate Binary Valuation</button>
+                <button type="button" className="generate-button" onClick={generateBinaryValuations}>Generate Binary Valuation</button>
                 <hr />
-                <button className="generate-button" onClick={generateIdenticalValuations}>Generate Identical Valuation</button>
+                <button type="button" className="generate-button" onClick={generateIdenticalValuations}>Generate Identical Valuation</button>
             </div>
             <hr />
             {valuations.map((agentValuations, agentIndex) => (
