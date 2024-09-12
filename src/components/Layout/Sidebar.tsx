@@ -189,6 +189,7 @@ const Sidebar: React.FC<SidebarProps> = ({ setResponse }) => {
                     <option value="3">Match And Freeze</option>
                     <option value="4">Leximin++</option>
                     <option value="5">Maximum Nash Welfare</option>
+                    <option value="6">Identical EFX</option>
                 </select>
             </div>
             <hr />
