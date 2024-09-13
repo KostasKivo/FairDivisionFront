@@ -1,34 +1,50 @@
 /* Base styles */
 .about-container {
-    padding: 20px;
-    font-family: Arial, sans-serif;
-    line-height: 1.6;
-    color: #333;
-    background-color: #f9f9f9;
-    border-radius: 8px;
+    padding: 30px;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.8;
+    font-size: 16px;
+    color: #2e2e2e;
+    background-color: #f4f4f4;
+    border-radius: 10px;
+    max-width: 1000px;
+    margin: 0 auto;
 }
 
 h1, h2 {
-    color: #2c2c2c; /* Dark gray/black */
-    margin-bottom: 20px;
+    color: #1e1e1e; /* Darker gray */
+    margin-bottom: 25px;
+    font-weight: bold;
+}
+
+h1 {
+    font-size: 2em; /* Larger heading */
+}
+
+h2 {
+    font-size: 1.75em;
 }
 
 h3 {
-    color: #4d4d4d; /* Medium gray */
-    margin-top: 20px;
+    color: #4a4a4a; /* Slightly lighter gray */
+    margin-top: 25px;
+    font-size: 1.5em;
 }
 
 .about-section {
-    margin-bottom: 30px;
+    margin-bottom: 35px;
 }
 
 .about-section p {
-    margin-bottom: 15px;
+    margin-bottom: 18px;
+    font-size: 1.1em;
+    line-height: 1.8;
 }
 
 a {
-    color: #2c2c2c; /* Dark gray/black */
+    color: #1a1a1a; /* Dark gray for links */
     text-decoration: none;
+    /*font-weight: bold;*/
 }
 
 a:hover {
@@ -38,16 +54,45 @@ a:hover {
 /* Medium screens */
 @media (max-width: 1024px) {
     .about-container {
+        padding: 20px;
+        border-radius: 8px;
+    }
+
+    h1 {
+        font-size: 1.75em;
+    }
+
+    h2 {
+        font-size: 1.5em;
+    }
+
+    h3 {
+        font-size: 1.3em;
+    }
+
+    .about-section {
+        margin-bottom: 30px;
+    }
+
+    .about-section p {
+        margin-bottom: 15px;
+        font-size: 1.05em;
+    }
+}
+
+/* Small screens */
+@media (max-width: 768px) {
+    .about-container {
         padding: 15px;
         border-radius: 6px;
     }
 
     h1, h2 {
-        font-size: 1.5em;
+        font-size: 1.4em;
     }
 
     h3 {
-        font-size: 1.2em;
+        font-size: 1.15em;
     }
 
     .about-section {
@@ -56,14 +101,15 @@ a:hover {
 
     .about-section p {
         margin-bottom: 12px;
+        font-size: 1em;
     }
 }
 
-/* Small screens */
-@media (max-width: 768px) {
+/* Extra small screens */
+@media (max-width: 480px) {
     .about-container {
         padding: 10px;
-        border-radius: 4px;
+        border-radius: 5px;
     }
 
     h1, h2 {
@@ -80,33 +126,10 @@ a:hover {
 
     .about-section p {
         margin-bottom: 10px;
-    }
-}
-
-/* Extra small screens */
-@media (max-width: 480px) {
-    .about-container {
-        padding: 5px;
-        border-radius: 2px;
-    }
-
-    h1, h2 {
-        font-size: 1em;
-    }
-
-    h3 {
-        font-size: 0.9em;
-    }
-
-    .about-section {
-        margin-bottom: 15px;
-    }
-
-    .about-section p {
-        margin-bottom: 8px;
+        font-size: 0.95em;
     }
 
     a {
-        font-size: 0.9em;
+        font-size: 0.95em;
     }
 }
